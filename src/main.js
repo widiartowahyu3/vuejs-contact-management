@@ -6,6 +6,7 @@ import UserRegister from "./components/user/UserRegister.vue";
 import UserLogin from "./components/user/UserLogin.vue";
 import DashboardLayout from "./components/DashboardLayout.vue";
 import ContactList from "./components/contact/ContactList.vue";
+import UserProfile from "./components/user/UserProfile.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,6 +31,10 @@ const router = createRouter({
         {
           path: "contacts",
           component: ContactList,
+        },
+        {
+          path: "users/profile",
+          component: UserProfile,
         },
       ],
     },
