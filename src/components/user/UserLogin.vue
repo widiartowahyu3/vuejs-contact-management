@@ -101,7 +101,7 @@ async function handleSubmit() {
   if (response.status === 200) {
     token.value = responseBody.data.token;
     await router.push({
-      path: "/dashboard/contacs",
+      path: "/dashboard/contacts",
     });
   } else {
     await alertError(responseBody.errors);
