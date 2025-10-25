@@ -197,30 +197,22 @@
       <a
         href="#"
         class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center"
+        v-if="page > 1"
       >
         <i class="fas fa-chevron-left mr-2"></i> Previous
       </a>
       <a
         href="#"
+        v-for="value in pages"
+        :key="value"
         class="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md"
       >
-        1
-      </a>
-      <a
-        href="#"
-        class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
-      >
-        2
-      </a>
-      <a
-        href="#"
-        class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
-      >
-        3
+        {{ value }}
       </a>
       <a
         href="#"
         class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center"
+        v-if="page < totalPage"
       >
         Next <i class="fas fa-chevron-right ml-2"></i>
       </a>
@@ -229,7 +221,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, reactive, ref } from "vue";
+import { onBeforeMount, onMounted, reactive, ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 import { contactList } from "../../lib/api/ContactApi";
 import { useLocalStorage } from "@vueuse/core";
@@ -242,21 +234,23 @@ const search = reactive({
   phone: "",
 });
 const contacts = ref();
-
-const page = 1;
+const totalPage = ref(1);
+const page = ref(1);
+const pages = ref([]);
 
 async function fetchContact() {
   const response = await contactList(token.value, {
     name: search.name,
     email: search.email,
     phone: search.phone,
-    page: page,
+    page: page.value,
   });
   const responseBody = await response.json();
   console.log(responseBody);
 
   if (response.status === 200) {
     contacts.value = responseBody.data;
+    totalPage.value = responseBody.paging.total_page;
   } else {
     await alertError(responseBody.errors);
   }
@@ -297,6 +291,15 @@ onMounted(() => {
     }
   });
 });
+
+watch(totalPage, (value) => {
+  const dataPages = [];
+  for (let i = 1; i <= value; i++) {
+    dataPages.push(i);
+  }
+  pages.value = dataPages;
+});
+console.log(pages);
 </script>
 
 <style scoped></style>

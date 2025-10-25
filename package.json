@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@vueuse/core": "^13.9.0",
+    "alert": "^6.0.2",
+    "sweet": "^0.1.1",
     "sweetalert2": "^11.26.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
